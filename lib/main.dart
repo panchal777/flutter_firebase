@@ -1,13 +1,15 @@
+import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/core/router/app_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AppRouter.init();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-  runApp(const MyApp());
+  await Firebase.initializeApp(
+    // options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

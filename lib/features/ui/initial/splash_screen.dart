@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/core/router/router_name.dart' show RouteName;
 import 'package:go_router/go_router.dart';
@@ -14,7 +15,7 @@ class _SplashScreen extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () => context.go(RouteName.login));
+    isLogin(context);
   }
 
   @override
@@ -22,5 +23,17 @@ class _SplashScreen extends State<SplashScreen> {
     return Scaffold(
       body: FlutterLogo(size: MediaQuery.of(context).size.height),
     );
+  }
+
+  void isLogin(BuildContext context) {
+    final auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
+    Timer(const Duration(seconds: 3), () {
+      if (user != null) {
+        context.go(RouteName.dashboard);
+      } else {
+        context.go(RouteName.login);
+      }
+    });
   }
 }
