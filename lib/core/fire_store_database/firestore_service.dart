@@ -6,6 +6,7 @@ class FireStoreService {
 
   static final instance = FireStoreService._();
 
+  // set with auto generated id
   Future<void> setData({
     required String path,
     required Map<String, dynamic> data,
@@ -19,6 +20,7 @@ class FireStoreService {
         });
   }
 
+  // set with with our own document id
   Future<void> setDataForUniqueId({
     required documentId,
     required String path,
@@ -35,6 +37,7 @@ class FireStoreService {
         });
   }
 
+  // update document by id
   Future<void> updateValue({
     required String path,
     required String documentId,
@@ -51,23 +54,14 @@ class FireStoreService {
         });
   }
 
-  Future<void> updateArray({
-    required String path,
-    required String documentId,
-    required List<String> data,
-  }) async {
-    var ref = FirebaseFirestore.instance.collection(path).doc(documentId);
-    ref
-        .update({"admins": FieldValue.arrayUnion(data)})
-        .then((value) => print("Post Updated"));
-  }
-
+  // delete table by path
   Future<void> deleteTableData({required String path}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.delete();
     debugPrint("FireStoreService: delete table data success -> $path");
   }
 
+  // delete single record from table
   Future<bool> deleteItemFromID({
     required String path,
     required String documentId,
@@ -82,6 +76,7 @@ class FireStoreService {
     return true;
   }
 
+  // get list of data
   Stream<List<T>> collectionStream<T>({
     required String path,
     required T Function(Object? data, String documentID) builder,
@@ -114,6 +109,7 @@ class FireStoreService {
     });
   }
 
+  // get list of distinct data
   Stream<List<String>> distinctListStream<T>({
     required String path,
     required T Function(Object? data, String documentID) builder,
@@ -153,6 +149,7 @@ class FireStoreService {
     });
   }
 
+  // get list with pagination
   Stream<PaginationModel> paginationList<T>({
     required String path,
     required T Function(Object? data, String documentID) builder,
@@ -186,6 +183,7 @@ class FireStoreService {
     });
   }
 
+  // get single record from table
   Stream<T> documentStream<T>({
     required String path,
     required String documentId,
@@ -204,78 +202,6 @@ class FireStoreService {
     );
     return snapshots.map((snapshot) => builder(snapshot.data(), snapshot.id));
   }
-
-  Stream<T> documentSubCollectionStream<T>({
-    required String mainPath,
-    required String subPath,
-    required String documentId,
-    required T Function(Object? data, String documentID) builder,
-  }) {
-    debugPrint(
-      "FireStoreService: documentSubCollectionStream-> mainPath: $mainPath subPath: $subPath, documentId: $documentId",
-    );
-    final DocumentReference reference = FirebaseFirestore.instance
-        .collection(mainPath)
-        .doc(documentId)
-        .collection(subPath)
-        .doc("${documentId}pdf");
-    final Stream<DocumentSnapshot> snapshots = reference.snapshots();
-
-    debugPrint(
-      "FireStoreService: documentSubCollectionStream data success: ${snapshots.length}",
-    );
-
-    return snapshots.map((snapshot) => builder(snapshot.data(), snapshot.id));
-  }
-
-  Future<void> saveDataInFireStore({
-    required Map<String, dynamic> map,
-    required String path,
-    required String subPath,
-  }) async {
-    var doc = FirebaseFirestore.instance.collection(path).doc();
-    await doc
-        .collection(subPath)
-        .doc()
-        .set(map) //,merge
-        .then((_) {
-          debugPrint(
-            "FireStoreService: saveDataInFireStore success: ${doc.id}",
-          );
-        });
-  }
-}
-
-deleteSubCollection({
-  required String path,
-  required String subCollectionPath,
-  required String documentId,
-}) async {
-  var snapshots =
-      FirebaseFirestore.instance
-          .collection(path)
-          .doc(documentId)
-          .collection(subCollectionPath)
-          .snapshots();
-  await snapshots.forEach((snapShots) {
-    if (snapShots.docs.isNotEmpty) {
-      for (var element in snapShots.docs) {
-        debugPrint(
-          "Delete collection for $documentId ----- $subCollectionPath : ${element.id}",
-        );
-        FirebaseFirestore.instance
-            .collection(path)
-            .doc(documentId)
-            .collection(subCollectionPath)
-            .doc(element.id)
-            .delete()
-            .then((value) {
-              // debugPrint("Delete collection for $subCollectionPath : ${element.id}");
-            });
-      }
-    }
-  });
-  return true;
 }
 
 class PaginationModel {

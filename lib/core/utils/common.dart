@@ -17,6 +17,6 @@ class Common {
     );
   }
 
-  // tenants/ebay/admin_user/[id]
-  static String dbBasePath = '${FireStorePath.tenant()}/${'ebay'}';
+  // tenants/ebay/user/[id]
+  static String dbBasePath = '${FireStorePath.tenant}/${'ebay'}';
 }

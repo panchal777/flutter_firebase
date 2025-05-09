@@ -46,7 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
       }
       if (next.stateModel.isSuccess) {
-        context.pushNamed(RouteName.dashboard);
+        context.go(RouteName.dashboard);
       }
       // }
     });

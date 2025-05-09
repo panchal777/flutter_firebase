@@ -2,9 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, UserCredential, User;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_firebase/core/fire_store_database/firestore_path.dart';
-import 'package:flutter_firebase/core/token_manager/token_manager.dart';
+import 'package:flutter_firebase/core/token_service/token_service.dart';
 import 'package:flutter_firebase/features/repository/authentication_repo.dart';
-
 import '../../core/fire_store_database/firestore_db.dart'
     show FireStoreDatabase;
 import '../models/admin_signup_model.dart' show SignUpModel;
@@ -21,25 +20,22 @@ class AuthenticationRepoImpl extends AuthenticationRepo {
       email: email,
       password: password,
     );
-
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      await currentUser.sendEmailVerification();
-    }
-
-    var tenantPath = FireStorePath.tenant();
-    var adminUserPath = FireStorePath.adminUsers();
-    var tenantId = 'ebay';
+    // User? currentUser = FirebaseAuth.instance.currentUser;
+    // if (currentUser != null) {
+    //   await currentUser.sendEmailVerification();
+    // }
+    var tenantPath = FireStorePath.tenant;
+    var userPath = FireStorePath.users;
+    var tenantID = FireStorePath.tenantId;
     SignUpModel model = SignUpModel();
     model.firstName = '';
     model.lastName = '';
     model.email = email;
     model.uuId = user.user!.uid;
-    model.tenantId = tenantId;
-    var path = '$tenantPath/$tenantId/$adminUserPath';
+    model.tenantId = tenantID;
+    var path = '$tenantPath/$tenantID/$userPath';
     debugPrint('path: $path');
-    await database.addAdmin(model.toMap(), path, model.uuId);
-   // await database.addAdminInTenant(tenantPath, tenantId, model.uuId);
+    await database.addUser(model.toMap(), path, model.uuId);
     return true;
   }
 
@@ -50,7 +46,7 @@ class AuthenticationRepoImpl extends AuthenticationRepo {
       email: email,
       password: password,
     );
-    await TokenManager().saveToken();
+    await TokenService().saveToken();
     return true;
   }
 
