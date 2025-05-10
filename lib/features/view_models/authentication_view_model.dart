@@ -64,6 +64,13 @@ class AuthenticationViewModel extends ChangeNotifier {
     stateModel = StateModel();
     //notifyListeners();
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    stateModel = StateModel();
+  }
 }
 
 final authenticationViewModelProvider =

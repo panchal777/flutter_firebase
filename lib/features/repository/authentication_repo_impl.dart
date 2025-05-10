@@ -3,10 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_firebase/core/fire_store_database/firestore_path.dart';
 import 'package:flutter_firebase/core/token_service/token_service.dart';
+import 'package:flutter_firebase/core/utils/common.dart';
 import 'package:flutter_firebase/features/repository/authentication_repo.dart';
 import '../../core/fire_store_database/firestore_db.dart'
     show FireStoreDatabase;
-import '../models/admin_signup_model.dart' show SignUpModel;
+import '../models/admin_signup_model.dart' show UserModel;
 
 class AuthenticationRepoImpl extends AuthenticationRepo {
   final FireStoreDatabase database;
@@ -27,7 +28,7 @@ class AuthenticationRepoImpl extends AuthenticationRepo {
     var tenantPath = FireStorePath.tenant;
     var userPath = FireStorePath.users;
     var tenantID = FireStorePath.tenantId;
-    SignUpModel model = SignUpModel();
+    UserModel model = UserModel();
     model.firstName = '';
     model.lastName = '';
     model.email = email;
@@ -47,6 +48,7 @@ class AuthenticationRepoImpl extends AuthenticationRepo {
       password: password,
     );
     await TokenService().saveToken();
+    await Common.saveUserDetails(user.user!.uid);
     return true;
   }
 

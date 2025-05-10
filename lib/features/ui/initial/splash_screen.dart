@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase/core/router/router_name.dart' show RouteName;
 import 'package:go_router/go_router.dart';
 
+import '../../../core/utils/common.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -15,7 +17,9 @@ class _SplashScreen extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    isLogin(context);
+    Timer(const Duration(seconds: 3), () async {
+      isLogin();
+    });
   }
 
   @override
@@ -25,15 +29,16 @@ class _SplashScreen extends State<SplashScreen> {
     );
   }
 
-  void isLogin(BuildContext context) {
+  void isLogin() async {
     final auth = FirebaseAuth.instance;
     final user = auth.currentUser;
-    Timer(const Duration(seconds: 3), () {
-      if (user != null) {
-        context.go(RouteName.dashboard);
-      } else {
-        context.go(RouteName.login);
-      }
-    });
+    if (user != null) {
+      await Common.saveUserDetails(user.uid);
+      if (!mounted) return; // ✅ Prevent using context if widget is disposed
+      context.go(RouteName.dashboard);
+    } else {
+      if (!mounted) return;
+      context.go(RouteName.login);
+    }
   }
 }

@@ -24,7 +24,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       routerConfig: AppRouter.baseRouters,
-      //home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

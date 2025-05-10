@@ -13,11 +13,8 @@ class FireStoreService {
     bool merge = false,
   }) async {
     var doc = FirebaseFirestore.instance.collection(path).doc();
-    await doc
-        .set(data) //,merge
-        .then((_) {
-          debugPrint("FireStoreService: set data success -> ${doc.id}");
-        });
+    await doc.set(data); //,merge
+    debugPrint("FireStoreService: set data success -> ${doc.id}");
   }
 
   // set with with our own document id
@@ -28,13 +25,8 @@ class FireStoreService {
     bool merge = false,
   }) async {
     var doc = FirebaseFirestore.instance.collection(path).doc(documentId);
-    await doc
-        .set(data) //,merge
-        .then((_) {
-          debugPrint(
-            "FireStoreService: set data for unique id success -> ${doc.id}",
-          );
-        });
+    await doc.set(data); //,merge
+    debugPrint("FireStoreService: set data for unique id success -> ${doc.id}");
   }
 
   // update document by id
@@ -43,15 +35,9 @@ class FireStoreService {
     required String documentId,
     required Map<String, dynamic> data,
   }) async {
-    await FirebaseFirestore.instance
-        .collection(path)
-        .doc(documentId)
-        .update(data)
-        .then((value) {
-          debugPrint(
-            "FireStoreService: post updated data success -> $documentId",
-          );
-        });
+    var doc = FirebaseFirestore.instance.collection(path).doc(documentId);
+    await doc.update(data);
+    debugPrint("FireStoreService: post updated data success -> $documentId");
   }
 
   // delete table by path
@@ -66,13 +52,9 @@ class FireStoreService {
     required String path,
     required String documentId,
   }) async {
-    await FirebaseFirestore.instance
-        .collection(path)
-        .doc(documentId)
-        .delete()
-        .then((value) {
-          debugPrint("FireStoreService: delete item from id success -> $path");
-        });
+    var doc = FirebaseFirestore.instance.collection(path).doc(documentId);
+    await doc.delete();
+    debugPrint("FireStoreService: delete item from id success -> $path");
     return true;
   }
 
@@ -184,7 +166,7 @@ class FireStoreService {
   }
 
   // get single record from table
-  Stream<T> documentStream<T>({
+  Future<T> documentStream<T>({
     required String path,
     required String documentId,
     required T Function(Object? data, String documentID) builder,
@@ -200,7 +182,7 @@ class FireStoreService {
     debugPrint(
       "FireStoreService: document stream data success: ${snapshots.length}",
     );
-    return snapshots.map((snapshot) => builder(snapshot.data(), snapshot.id));
+    return snapshots.map((snapshot) => builder(snapshot.data(), snapshot.id)).first;
   }
 }
 

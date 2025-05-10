@@ -17,5 +17,11 @@ class AppString {
   static const String forgotPasswordSuccessMsg =
       'We have sent you email to recover password, please check email';
 
+  static const String logOut='Logout';
+  static const String logoutTitle='Confirm Logout';
+  static const String logOutContent='Are you sure you want to log out?';
+  static const String cancel='Cancel';
+  static const String logOutBtn='Logout';
+
   static String enterValue(String value) => 'Enter $value';
 }

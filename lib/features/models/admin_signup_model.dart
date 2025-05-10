@@ -1,5 +1,5 @@
-class SignUpModel {
-  SignUpModel({
+class UserModel {
+  UserModel({
     this.id = '',
     this.firstName = '',
     this.lastName = '',
@@ -15,8 +15,8 @@ class SignUpModel {
   String tenantId;
   String uuId;
 
-  factory SignUpModel.fromMap(Map<dynamic, dynamic> value, String documentID) {
-    return SignUpModel(
+  factory UserModel.fromMap(Map<dynamic, dynamic> value, String documentID) {
+    return UserModel(
       id: documentID,
       firstName: value['first_name'],
       lastName: value['last_name'],

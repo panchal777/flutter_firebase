@@ -45,6 +45,7 @@ dependencies:
   # showing messages
   fluttertoast: ^8.2.12
   flutter_riverpod: ^2.6.1
+  flutter_secure_storage: ^9.2.4
 
 dev_dependencies:
   flutter_test:
